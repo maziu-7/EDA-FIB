@@ -4,7 +4,7 @@
  * Write the name of your player and save this file
  * with the same name and .cc extension.
  */
-#define PLAYER_NAME Dürum_Mixto
+#define PLAYER_NAME Mateus
 
 
 struct PLAYER_NAME : public Player {
@@ -20,7 +20,7 @@ struct PLAYER_NAME : public Player {
   /**
    * Types and attributes for your player can be defined here.
    */
-  Dir ds = {Down, Right, Up, Left};
+  const vector<Dir> ds = {Down, Right, Up, Left};
 
   void search_items(const int& id) {
     Pos p = citizen(id).pos;
@@ -30,9 +30,9 @@ struct PLAYER_NAME : public Player {
     if (citizen(id).type == Warrior) {
       for (Dir act_dir : ds) { //check all adjacent positions to mine which I can visit
         vis[p.i][p.j] = true;
-        Pos new = p + act_dir;
-        if (pos_ok(new) and cell(new).type == Street and cell(new).id == -1 and cell(new).b_owner == -1) {
-          q.push({{new,act_dir},1});
+        Pos new_pos = p + act_dir;
+        if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+          q.push({{new_pos,act_dir},1});
         }
       }
 
@@ -43,14 +43,15 @@ struct PLAYER_NAME : public Player {
         q.pop();
         vis[next_cell.i][next_cell.j] = true;
 
-        if ((cell(next_cell).weapon != NoWeapon and cell(next_cell).weapon > citizen(id).weapon) or (cell(next_cell).bonus == Food and warrior_ini_life() > citizen(id).life) or ) {
+        if ((cell(next_cell).weapon != NoWeapon and cell(next_cell).weapon > citizen(id).weapon) or (cell(next_cell).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(next_cell).bonus == Money) {
           move(id,next_dir);
+          return;
         }
 
         for (Dir act_dir : ds) {
-          Pos pos_adj = act_dir + next_dir;
-          if (pos_ok(pos_adj) and (not vis[pos_adj.i][pos_adj.j]) and cell(new).type == Street and cell(new).id == -1 and cell(new).b_owner == -1) {
-            q.push({pos_adj,act_dir},++path);
+          Pos pos_adj = next_cell + act_dir;
+          if (pos_ok(pos_adj) and (not vis[pos_adj.i][pos_adj.j]) and cell(pos_adj).type == Street and cell(pos_adj).id == -1 and cell(pos_adj).b_owner == -1) {
+            q.push({{pos_adj,act_dir},++path});
           }
         }
       }
@@ -59,9 +60,9 @@ struct PLAYER_NAME : public Player {
     else if (citizen(id).type == Builder) {
       for (Dir act_dir : ds) { //adyacentes
         vis[p.i][p.j] = true;
-        Pos new = p + act_dir;
-        if (pos_ok(new) and cell(new).type == Street and cell(new).b_owner == -1 and cell(new).id == -1) {
-          q.push({{new,act_dir},1});
+        Pos new_pos = p + act_dir;
+        if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).b_owner == -1 and cell(new_pos).id == -1) {
+          q.push({{new_pos,act_dir},1});
         }
       }
 
@@ -75,16 +76,16 @@ struct PLAYER_NAME : public Player {
     }
   }
 
-  void fight() {
+  void fight(const int& id) {
     Pos p = citizen(id).pos;
     bool vis[board_rows()][board_cols()] = {false};
     queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
 
     for (Dir act_dir : ds) { //adyacentes
       vis[p.i][p.j] = true;
-      Pos new = p + act_dir;
-      if (pos_ok(new) and cell(new).type == Street and cell(new).b_owner == -1 and cell(new).id == -1) {
-        q.push({{new,act_dir},1});
+      Pos new_pos = p + act_dir;
+      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).b_owner == -1 and cell(new_pos).id == -1) {
+        q.push({{new_pos,act_dir},1});
       }
     }
 
@@ -97,16 +98,16 @@ struct PLAYER_NAME : public Player {
     }
   }
 
-  void run() { //either run (or stay inside a barricade)
+  void run(const int& id) { //either run (or stay inside a barricade)
     Pos p = citizen(id).pos;
     bool vis[board_rows()][board_cols()] = {false};
     queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
 
     for (Dir act_dir : ds) { //adyacentes
       vis[p.i][p.j] = true;
-      Pos new = p + act_dir;
-      if (pos_ok(new) and cell(new).type == Street and cell(new).b_owner == -1 and cell(new).id == -1) {
-        q.push({{new,act_dir},1});
+      Pos new_pos = p + act_dir;
+      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).b_owner == -1 and cell(new_pos).id == -1) {
+        q.push({{new_pos,act_dir},1});
       }
     }
 
@@ -123,16 +124,16 @@ struct PLAYER_NAME : public Player {
    * Play method, invoked once per each round.
    */
   virtual void play () {
-    vector<int> warriors = warriors(me());
-    vector<int> builders = builders(me());
+    vector<int> war = warriors(me());
+    vector<int> bui = builders(me());
 
-    if (is_round_day()) {
-      for (int id : warriors) search_items(id);
-      for (int id : builders) search_items(id);
+    if (is_day()) {
+      for (int id : war) search_items(id);
+      //for (int id : bui) search_items(id);
     }
     else {
-      for (int id : warriors) search_items(id);
-      for (int id : builders) run(id);
+      for (int id : war) search_items(id);
+      //for (int id : bui) run(id);
     }
   }
 };
