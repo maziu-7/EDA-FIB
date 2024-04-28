@@ -28,10 +28,10 @@ struct PLAYER_NAME : public Player {
     queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
 
     if (citizen(id).type == Warrior) {
-      for (Dir act_dir : ds) { //adyacentes
+      for (Dir act_dir : ds) { //check all adjacent positions to mine which I can visit
         vis[p.i][p.j] = true;
         Pos new = p + act_dir;
-        if (pos_ok(new) and cell(new).type == Street and cell(new).b_owner == -1 and cell(new).id == -1) {
+        if (pos_ok(new) and cell(new).type == Street and cell(new).id == -1 and cell(new).b_owner == -1) {
           q.push({{new,act_dir},1});
         }
       }
@@ -43,8 +43,15 @@ struct PLAYER_NAME : public Player {
         q.pop();
         vis[next_cell.i][next_cell.j] = true;
 
-        if ((cell(next_cell).weapon != NoWeapon and cell(next_cell).weapon > citizen(id).weapon) or (cell(next_cell).bonus == Food and warrior_ini_life() > citizen(id).)) {
+        if ((cell(next_cell).weapon != NoWeapon and cell(next_cell).weapon > citizen(id).weapon) or (cell(next_cell).bonus == Food and warrior_ini_life() > citizen(id).life) or ) {
+          move(id,next_dir);
+        }
 
+        for (Dir act_dir : ds) {
+          Pos pos_adj = act_dir + next_dir;
+          if (pos_ok(pos_adj) and (not vis[pos_adj.i][pos_adj.j]) and cell(new).type == Street and cell(new).id == -1 and cell(new).b_owner == -1) {
+            q.push({pos_adj,act_dir},++path);
+          }
         }
       }
     }
@@ -90,7 +97,7 @@ struct PLAYER_NAME : public Player {
     }
   }
 
-  void run() {
+  void run() { //either run (or stay inside a barricade)
     Pos p = citizen(id).pos;
     bool vis[board_rows()][board_cols()] = {false};
     queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
@@ -124,7 +131,7 @@ struct PLAYER_NAME : public Player {
       for (int id : builders) search_items(id);
     }
     else {
-      for (int id : warriors) fight(id);
+      for (int id : warriors) search_items(id);
       for (int id : builders) run(id);
     }
   }
