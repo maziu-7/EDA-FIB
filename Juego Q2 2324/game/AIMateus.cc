@@ -5,7 +5,7 @@
  * Write the name of your player and save this file
  * with the same name and .cc extension.
  */
-#define PLAYER_NAME Null
+#define PLAYER_NAME Dürum_Mixto
 
 
 struct PLAYER_NAME : public Player {
@@ -21,6 +21,20 @@ struct PLAYER_NAME : public Player {
   /**
    * Types and attributes for your player can be defined here.
    */
+  vector<vector<bool>> Matrix;
+
+  void search_bazooka(const int& id) {
+    Pos p = citizen(id).pos;
+    Matrix vis(board_rows(), vector<bool>(board_cols(), false));
+    queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
+
+    if (is_day() and citizen(id).type == Warrior) {
+      
+    }
+
+
+  }
+
 
   /**
    * Play method, invoked once per each round.
