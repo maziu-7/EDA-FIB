@@ -25,7 +25,7 @@ bool in_range(const Grafo& G, pair<int,int> p) {
     return false;
 }
 
-int DFS(Grafo& G, int r, int c) {
+int BFS(Grafo& G, int r, int c) {
     int n = G.size();
     int m = G[0].size();
     //en el pair guardamos las coordenadas x y, en el int guardamos la distancia actual
