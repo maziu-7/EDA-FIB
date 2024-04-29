@@ -20,103 +20,157 @@ struct PLAYER_NAME : public Player {
   /**
    * Types and attributes for your player can be defined here.
    */
-  const vector<Dir> ds = {Down, Right, Up, Left};
+  const vector<Dir> directions = {Down, Right, Up, Left};
 
-  void search_items(const int& id) {
+  void search_warriors(const int& id) {
     Pos p = citizen(id).pos;
-    bool vis[board_rows()][board_cols()] = {false};
+    vector<vector<bool>> vis(board_rows(), vector<bool>(board_cols(), false));
     queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
-
-    if (citizen(id).type == Warrior) {
-      for (Dir act_dir : ds) { //check all adjacent positions to mine which I can visit
-        vis[p.i][p.j] = true;
-        Pos new_pos = p + act_dir;
-        if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
-          q.push({{new_pos,act_dir},1});
-        }
-      }
-
-      while (not q.empty()) { //avanzamos
-        Pos next_cell = q.front().first.first;
-        Dir next_dir  = q.front().first.second;
-        int path = q.front().second;
-        q.pop();
-        vis[next_cell.i][next_cell.j] = true;
-
-        if ((cell(next_cell).weapon != NoWeapon and cell(next_cell).weapon > citizen(id).weapon) or (cell(next_cell).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(next_cell).bonus == Money) {
-          move(id,next_dir);
+    vis[p.i][p.j] = true;
+       
+    for (Dir act_dir : directions) { //check all positions I can visit that are adjacent to mine
+      Pos new_pos = p + act_dir;
+      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+        q.push({{new_pos,act_dir},1});
+        vis[new_pos.i][new_pos.j] = true;
+        if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+          move(id,act_dir);
           return;
         }
+      }
+    }
 
-        for (Dir act_dir : ds) {
-          Pos pos_adj = next_cell + act_dir;
-          if (pos_ok(pos_adj) and (not vis[pos_adj.i][pos_adj.j]) and cell(pos_adj).type == Street and cell(pos_adj).id == -1 and cell(pos_adj).b_owner == -1) {
-            q.push({{pos_adj,act_dir},++path});
+    while (not q.empty()) { //advance to next pos
+      Pos next_cell = q.front().first.first;
+      Dir next_dir  = q.front().first.second;
+      int path = q.front().second;
+      q.pop();
+      
+      for (Dir act_dir : directions) { //check next pos
+        Pos new_pos = next_cell + act_dir;
+        if (pos_ok(new_pos) and (not vis[new_pos.i][new_pos.j]) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+          q.push({{new_pos,next_dir},path+1});
+          vis[new_pos.i][new_pos.j] = true;
+          if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+            move(id,next_dir);
+            return;
           }
         }
       }
     }
+  }
 
-    else if (citizen(id).type == Builder) {
-      for (Dir act_dir : ds) { //adyacentes
-        vis[p.i][p.j] = true;
-        Pos new_pos = p + act_dir;
-        if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).b_owner == -1 and cell(new_pos).id == -1) {
-          q.push({{new_pos,act_dir},1});
+  void search_builders(const int& id) {
+    Pos p = citizen(id).pos;
+    vector<vector<bool>> vis(board_rows(), vector<bool>(board_cols(), false));
+    queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
+    vis[p.i][p.j] = true;
+       
+    for (Dir act_dir : directions) { //check all positions I can visit that are adjacent to mine
+      Pos new_pos = p + act_dir;
+      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+        q.push({{new_pos,act_dir},1});
+        vis[new_pos.i][new_pos.j] = true;
+        if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+          move(id,act_dir);
+          return;
         }
       }
-
-      while (not q.empty()) { //avanzamos
-        Pos next_cell = q.front().first.first;
-        Dir next_dir  = q.front().first.second;
-        int path = q.front().second;
-        q.pop();
-        vis[next_cell.i][next_cell.j] = true;
-      }
-    }
-  }
-
-  void fight(const int& id) {
-    Pos p = citizen(id).pos;
-    bool vis[board_rows()][board_cols()] = {false};
-    queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
-
-    for (Dir act_dir : ds) { //adyacentes
-      vis[p.i][p.j] = true;
-      Pos new_pos = p + act_dir;
-      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).b_owner == -1 and cell(new_pos).id == -1) {
-        q.push({{new_pos,act_dir},1});
-      }
     }
 
-    while (not q.empty()) { //avanzamos
+    while (not q.empty()) { //advance to next pos
       Pos next_cell = q.front().first.first;
       Dir next_dir  = q.front().first.second;
       int path = q.front().second;
       q.pop();
-      vis[next_cell.i][next_cell.j] = true;
+      
+      for (Dir act_dir : directions) { //check next pos
+        Pos new_pos = next_cell + act_dir;
+        if (pos_ok(new_pos) and (not vis[new_pos.i][new_pos.j]) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+          q.push({{new_pos,next_dir},path+1});
+          vis[new_pos.i][new_pos.j] = true;
+          if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+            move(id,next_dir);
+            return;
+          }
+        }
+      }
     }
   }
 
-  void run(const int& id) { //either run (or stay inside a barricade)
+  void fight_warriors(const int& id) {
     Pos p = citizen(id).pos;
-    bool vis[board_rows()][board_cols()] = {false};
+    vector<vector<bool>> vis(board_rows(), vector<bool>(board_cols(), false));
     queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
-
-    for (Dir act_dir : ds) { //adyacentes
-      vis[p.i][p.j] = true;
+    vis[p.i][p.j] = true;
+       
+    for (Dir act_dir : directions) { //check all positions I can visit that are adjacent to mine
       Pos new_pos = p + act_dir;
-      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).b_owner == -1 and cell(new_pos).id == -1) {
+      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
         q.push({{new_pos,act_dir},1});
+        vis[new_pos.i][new_pos.j] = true;
+        if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+          move(id,act_dir);
+          return;
+        }
       }
     }
 
-    while (not q.empty()) { //avanzamos
+    while (not q.empty()) { //advance to next pos
       Pos next_cell = q.front().first.first;
       Dir next_dir  = q.front().first.second;
       int path = q.front().second;
       q.pop();
-      vis[next_cell.i][next_cell.j] = true;
+      
+      for (Dir act_dir : directions) { //check next pos
+        Pos new_pos = next_cell + act_dir;
+        if (pos_ok(new_pos) and (not vis[new_pos.i][new_pos.j]) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+          q.push({{new_pos,next_dir},path+1});
+          vis[new_pos.i][new_pos.j] = true;
+          if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+            move(id,next_dir);
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  void fight_builders(const int& id) {
+    Pos p = citizen(id).pos;
+    vector<vector<bool>> vis(board_rows(), vector<bool>(board_cols(), false));
+    queue<pair<pair<Pos, Dir>,int>> q; //queue with the position, direction and current path
+    vis[p.i][p.j] = true;
+       
+    for (Dir act_dir : directions) { //check all positions I can visit that are adjacent to mine
+      Pos new_pos = p + act_dir;
+      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+        q.push({{new_pos,act_dir},1});
+        vis[new_pos.i][new_pos.j] = true;
+        if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+          move(id,act_dir);
+          return;
+        }
+      }
+    }
+
+    while (not q.empty()) { //advance to next pos
+      Pos next_cell = q.front().first.first;
+      Dir next_dir  = q.front().first.second;
+      int path = q.front().second;
+      q.pop();
+      
+      for (Dir act_dir : directions) { //check next pos
+        Pos new_pos = next_cell + act_dir;
+        if (pos_ok(new_pos) and (not vis[new_pos.i][new_pos.j]) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+          q.push({{new_pos,next_dir},path+1});
+          vis[new_pos.i][new_pos.j] = true;
+          if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+            move(id,next_dir);
+            return;
+          }
+        }
+      }
     }
   }
 
@@ -128,12 +182,12 @@ struct PLAYER_NAME : public Player {
     vector<int> bui = builders(me());
 
     if (is_day()) {
-      for (int id : war) search_items(id);
-      //for (int id : bui) search_items(id);
+      for (int id : war) search_warriors(id);
+      for (int id : bui) search_builders(id);
     }
     else {
-      for (int id : war) search_items(id);
-      //for (int id : bui) run(id);
+      for (int id : war) fight_warriors(id);
+      for (int id : bui) fight_builders(id);
     }
   }
 };
