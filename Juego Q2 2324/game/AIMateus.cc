@@ -71,7 +71,7 @@ struct PLAYER_NAME : public Player {
       if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
         q.push({{new_pos,act_dir},1});
         vis[new_pos.i][new_pos.j] = true;
-        if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+        if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and builder_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
           move(id,act_dir);
           return;
         }
@@ -106,10 +106,10 @@ struct PLAYER_NAME : public Player {
        
     for (Dir act_dir : directions) { //check all positions I can visit that are adjacent to mine
       Pos new_pos = p + act_dir;
-      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+      if (pos_ok(new_pos) and cell(new_pos).type == Street and cell(new_pos).b_owner == -1) {
         q.push({{new_pos,act_dir},1});
         vis[new_pos.i][new_pos.j] = true;
-        if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+        if ((cell(new_pos).id != -1 and citizen(id) != me()) or (cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
           move(id,act_dir);
           return;
         }
@@ -124,10 +124,10 @@ struct PLAYER_NAME : public Player {
       
       for (Dir act_dir : directions) { //check next pos
         Pos new_pos = next_cell + act_dir;
-        if (pos_ok(new_pos) and (not vis[new_pos.i][new_pos.j]) and cell(new_pos).type == Street and cell(new_pos).id == -1 and cell(new_pos).b_owner == -1) {
+        if (pos_ok(new_pos) and (not vis[new_pos.i][new_pos.j]) and cell(new_pos).type == Street and cell(new_pos).b_owner == -1) {
           q.push({{new_pos,next_dir},path+1});
           vis[new_pos.i][new_pos.j] = true;
-          if ((cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
+          if ((cell(new_pos).id != -1 and citizen(id) != me()) or (cell(new_pos).weapon != NoWeapon and (cell(new_pos).weapon > citizen(id).weapon or citizen(id).weapon == NoWeapon)) or (cell(new_pos).bonus == Food and warrior_ini_life() > citizen(id).life) or cell(new_pos).bonus == Money) {
             move(id,next_dir);
             return;
           }
