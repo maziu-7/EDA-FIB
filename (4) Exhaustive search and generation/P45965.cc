@@ -18,11 +18,11 @@ void zerosuns(int i, int n, int u, vector<int>& sol, int nu) {
     else {
         if (i - nu < n - u) {
             sol[i] = 0;
-            zerosuns(i+1,n,u,sol,nu);
+            zerosuns(i+1, n, u, sol, nu);
         }
         if (nu < u) {
             sol[i] = 1;
-            zerosuns(i+1,n,u,sol,nu+1);
+            zerosuns(i+1, n, u, sol, nu+1);
         }
     }
 }
@@ -32,5 +32,5 @@ int main() {
     cin >> n >> u;
 
     vector<int> sol(n);
-    zerosuns(0,n,u,sol,0);
+    zerosuns(0, n, u, sol, 0);
 }
