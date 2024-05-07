@@ -6,7 +6,7 @@ void escriu_perm(const vector<int>& v) {
 	cout << '(';
 	for (int i = 0; i < v.size()-1; ++i) cout << v[i] << ',';
 	cout << v[v.size()-1] << ')' << endl;
-}	
+}
 
 void permutations(vector<int>& v, int i, int n, vector<bool>& used) {
 	if (i == v.size()) escriu_perm(v);
