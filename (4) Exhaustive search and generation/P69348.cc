@@ -12,7 +12,7 @@ void write(const vector<int>& v) {
 }
 
 void permutations(int i, VI& sol, VB& used, int n) {
-	if (i == n) write(v);
+	if (i == n) write(sol);
 	else {
 		for (int j = 1; j <= n; ++j) {
 			if (not used[j-1]) {
