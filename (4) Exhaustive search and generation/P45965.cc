@@ -12,24 +12,25 @@ void escribir_vector(const vector<int>& v) {
     cout << endl;
 }
 
-// k = cantidad de unos que queremos
-void combinacion(vector<int>& v, int i, int k, int qt_ceros, int qt_unos) {
-    if (v.size() == i) escribir_vector(v);
+// nu = cantidad de unos que queremos
+void zerosuns(int i, int n, int u, vector<int>& sol, int nu) {
+    if (n == i) escribir_vector(sol);
     else {
-        if (qt_ceros < int(v.size()) - k) {
-            v[i] = 0;
-            combinacion(v,i+1,k,qt_ceros+1,qt_unos);
+        if (i - nu < n - u) {
+            sol[i] = 0;
+            zerosuns(i+1,n,u,sol,nu);
         }
-        if (qt_unos < k) {
-            v[i] = 1;
-            combinacion(v,i+1,k,qt_ceros,qt_unos+1);
+        if (nu < u) {
+            sol[i] = 1;
+            zerosuns(i+1,n,u,sol,nu+1);
         }
     }
 }
 
 int main() {
-    int n,k;
-    cin >> n >> k;
-    vector<int> v(n);
-    combinacion(v,0,k,0,0);
+    int n,u;
+    cin >> n >> u;
+
+    vector<int> sol(n);
+    zerosuns(0,n,u,sol,0);
 }
