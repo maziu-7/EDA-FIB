@@ -2,42 +2,42 @@
 #include <vector>
 using namespace std;
 
-void print(const vector<string>& sol) {
+typedef vector<string> VS;
+typedef vector<int> VI;
+typedef vector<bool> VB;
+
+void print(const VS& par, const VI& sol) {
     for (int i = 0; i < sol.size(); i++) {
         if (i == 0) cout << '(';
         else cout << ',';
-        cout << sol[i];
+        cout << par[sol[i]];
         if (i == sol.size()-1) cout << ')';
     }
     cout << endl;
 }
 
-bool already_used(int k, string word, const vector<string>& sol) {
-    for (int i = 0; i < k; i++) 
-        if (sol[i] == word) return true;
-    return false;
-}
-
-void perm_words(int k, const vector<string>& words, vector<string>& sol) {
-    // If a solution has been found then print it out
-    if (k == sol.size()) print(sol);
-    else {
-        for (auto s : words) {
-            if (not already_used(k, s, sol)) {
-                sol[k] = s;
-                perm_words(k+1, words, sol);
-            }
-        }
-    }
+void permutations(int i, VS& par, VI& sol, VB& used, int n) {
+	if (i == n) print(par, sol);
+	else {
+		for (int j = 0; j < n; ++j) {
+			if (not used[j]) {
+				used[j] = true;
+				sol[i] = j;
+				permutations(i+1, par, sol, used, n);
+				used[j] = false;
+			}
+		}
+	}
 }
 
 int main() {
     int n;
     cin >> n;
 
-    vector<string> words(n);
-    for (int i = 0; i < n; i++) cin >> words[i];
+    VS par(n);
+    for (int i = 0; i < n; i++) cin >> par[i];
 
-    vector<string> sol(n);
-    perm_words(0, words, sol);
+    VI sol(n);
+    VB used(n, false);
+    permutations(0, par, sol, used, n);
 }
