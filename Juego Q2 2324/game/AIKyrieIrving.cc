@@ -25,16 +25,20 @@ struct PLAYER_NAME : public Player {
 
   void search_warriors(const int& id) {
     Pos p = citizen(id).pos;
-    vector<VI> vis(board_rows(), VI(board_cols(), 1));
+    vector<VI> vis(board_rows(), VI(board_cols(), 0));
     queue<pair<Pos, Dir>> q; //queue with the position, direction and current path
-    vis[p.i][p.j] = 2;
+    vis[p.i][p.j] = 1;
        
     for (Dir cur_dir : directions) { //check all positions I can visit that are adjacent to mine
       Pos pos = p + cur_dir;
       if (pos_ok(pos) and cell(pos).type == Street and cell(pos).id == -1 and cell(pos).b_owner == -1) {
         q.push({pos,cur_dir});
-        vis[pos.i][pos.j] = 2;
-        if (cell(pos).weapon >= citizen(id).weapon) {
+        vis[pos.i][pos.j] = 1;
+        if (cell(pos).weapon == Bazooka) {
+          move(id,cur_dir);
+          return;
+        }
+        else if (cell(pos).weapon != NoWeapon) {
           move(id,cur_dir);
           return;
         }
@@ -56,10 +60,14 @@ struct PLAYER_NAME : public Player {
       
       for (Dir cur_dir : directions) { //check next pos
         Pos pos = next_cell + cur_dir;
-        if (pos_ok(pos) and vis[pos.i][pos.j] == 1 and cell(pos).type == Street and cell(pos).id == -1 and cell(pos).b_owner == -1) {
+        if (pos_ok(pos) and vis[pos.i][pos.j] == 0 and cell(pos).type == Street and cell(pos).id == -1 and cell(pos).b_owner == -1) {
           q.push({pos,next_dir});
-          vis[pos.i][pos.j] = 2; //add coordinates to queue if it's valid
-          if (cell(pos).weapon >= citizen(id).weapon) {
+          vis[pos.i][pos.j] = 1; //add coordinates to queue if it's valid
+          if (cell(pos).weapon == Bazooka) {
+            move(id,cur_dir);
+            return;
+          }
+          else if (cell(pos).weapon != NoWeapon) {
             move(id,cur_dir);
             return;
           }
@@ -78,9 +86,9 @@ struct PLAYER_NAME : public Player {
 
   void search_builders(const int& id) {
     Pos p = citizen(id).pos;
-    vector<VI> vis(board_rows(), VI(board_cols(), 1));
+    vector<VI> vis(board_rows(), VI(board_cols(), 0));
     queue<pair<Pos, Dir>> q; //queue with the position, direction and current path
-    vis[p.i][p.j] = 2;
+    vis[p.i][p.j] = 1;
     vector<int> wrr = warriors(me());
 
     bool tienen = true;
@@ -93,7 +101,7 @@ struct PLAYER_NAME : public Player {
       Pos pos = p + cur_dir;
       if (pos_ok(pos) and cell(pos).type == Street and cell(pos).id == -1 and cell(pos).b_owner == -1) {
         q.push({pos,cur_dir});
-        vis[pos.i][pos.j] = 2;
+        vis[pos.i][pos.j] = 1;
         if (cell(pos).bonus == Money) {
           move(id,cur_dir);
           return;
@@ -116,9 +124,9 @@ struct PLAYER_NAME : public Player {
       
       for (Dir cur_dir : directions) { //check next pos
         Pos pos = next_cell + cur_dir;
-        if (pos_ok(pos) and vis[pos.i][pos.j] == 1 and cell(pos).type == Street and cell(pos).id == -1 and cell(pos).b_owner == -1) {
+        if (pos_ok(pos) and vis[pos.i][pos.j] == 0 and cell(pos).type == Street and cell(pos).id == -1 and cell(pos).b_owner == -1) {
           q.push({pos,next_dir});
-          vis[pos.i][pos.j] = 2;
+          vis[pos.i][pos.j] = 1;
           if (cell(pos).bonus == Money) {
             move(id,cur_dir);
             return;
@@ -138,9 +146,9 @@ struct PLAYER_NAME : public Player {
 
   void fight_warriors(const int& id) {
     Pos p = citizen(id).pos;
-    vector<VI> vis(board_rows(), VI(board_cols(), 1));
+    vector<VI> vis(board_rows(), VI(board_cols(), 0));
     queue<pair<Pos, Dir>> q; //queue with the position, direction and current path
-    vis[p.i][p.j] = 2;
+    vis[p.i][p.j] = 1;
        
     for (Dir cur_dir : directions) { //check all positions I can visit that are adjacent to mine
       Pos pos = p + cur_dir;
@@ -153,7 +161,7 @@ struct PLAYER_NAME : public Player {
         }
         else {
           q.push({pos,cur_dir});
-          vis[pos.i][pos.j] = 2;
+          vis[pos.i][pos.j] = 1;
         }
       }
     }
@@ -165,7 +173,7 @@ struct PLAYER_NAME : public Player {
       
       for (Dir cur_dir : directions) { //check next pos
         Pos pos = next_cell + cur_dir;
-        if (pos_ok(pos) and vis[pos.i][pos.j] == 1 and cell(pos).type == Street and cell(pos).b_owner == -1) {
+        if (pos_ok(pos) and vis[pos.i][pos.j] == 0 and cell(pos).type == Street and cell(pos).b_owner == -1) {
           if (cell(pos).id != -1) {
             if ((citizen(cell(pos).id).player != me() and citizen(cell(pos).id).life <= citizen(id).life and citizen(cell(pos).id).weapon <= citizen(id).weapon) or (citizen(cell(pos).id).type == Builder)) {
               move(id, cur_dir);
@@ -174,7 +182,7 @@ struct PLAYER_NAME : public Player {
           }
           else {
             q.push({pos,next_dir});
-            vis[pos.i][pos.j] = 2;
+            vis[pos.i][pos.j] = 1;
           }
         }
       }
