@@ -4,17 +4,16 @@ using namespace std;
 
 typedef vector<string> VS;
 typedef vector<int> VI;
-typedef vector<bool> VB;
 
-void write(const VS& v, const VI& sol, int n, int p) {
+void write(const VS& par, const VI& sol, int n, int p) {
     for (int i = 0; i < p; ++i) {
         cout << "subset " << i+1 << ": {";
-        bool found = true;
+        bool primero = true;
         for (int j = 0; j < n; ++j) {
             if (sol[j] == i) {
-                if (found) found = false;
+                if (primero) primero = false;
                 else cout << ',';
-                cout << v[j];
+                cout << par[j];
             }
         }
         cout << '}' << endl;
@@ -22,12 +21,12 @@ void write(const VS& v, const VI& sol, int n, int p) {
     cout << endl;
 }
 
-void particions(VS& v, VI& sol, int n, int p, int i) {
-    if (n == i) write(v, sol, n, p);
+void particions(int i, const VS& par, VI& sol, int n, int p) {
+    if (n == i) write(par, sol, n, p);
     else {
         for (int j = 0; j < p; ++j) {
             sol[i] = j;
-            particions(v, sol, n, p, i+1);
+            particions(i+1, par, sol, n, p);
         }
     }
 }
@@ -35,9 +34,10 @@ void particions(VS& v, VI& sol, int n, int p, int i) {
 int main() {
     int n,p;
     cin >> n;
-    VS v(n);
-    for (int i = 0; i < n; ++i) cin >> v[i];
+    VS par(n);
+    for (int i = 0; i < n; ++i) cin >> par[i];
+
     cin >> p;
     VI sol(n);
-    particions(v, sol, n, p, 0);
+    particions(0, par, sol, n, p);
 }
