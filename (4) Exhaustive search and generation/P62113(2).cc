@@ -26,7 +26,7 @@ void escribir(const VI& mon, VB& usat1, VB& usat2, int x, int n) {
 
 void dues_monedes(int x, int n, const VI& mon, VB& usat1, VB& usat2, int i, int suma) {
     if (x == suma) escribir(mon, usat1, usat2, x, n);
-    else if (i < n and x < suma) {
+    else if (i < n and x > suma) {
         if (not usat1[i]) {
             usat1[i] = true;
             dues_monedes(x, n, mon, usat1, usat2, i, suma+mon[i]);
