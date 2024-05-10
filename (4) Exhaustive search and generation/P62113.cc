@@ -11,10 +11,15 @@ void escribir(const VI& mon, VB& usat, int x, int n) {
     bool primer = true;
     for (int i = 0; i < n; ++i) {
         if (usat[i]) {
-            if (primer) primer = false;
-            else cout << " + ";
-            cout << mon[i];
-            if (i%2 != 0) cout << 'p';
+            if (primer) {
+				primer = false;
+				cout << mon[i];
+				if (i%2 != 0) cout << "p";
+			}
+			else {
+				cout << " + " << mon[i];
+				if (i%2 != 0) cout << "p";
+			}
         }
     }
     cout << endl;
