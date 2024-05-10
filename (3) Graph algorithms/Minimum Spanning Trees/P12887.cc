@@ -4,7 +4,7 @@
 using namespace std;
 
 typedef pair<int,int> Arco; //first = distancia, second = vertice
-typedef vector<vector<int>> Grafo;
+typedef vector<vector<Arc>> Grafo;
 
 int prim(const Grafo& G) {
     int n = G.size();
