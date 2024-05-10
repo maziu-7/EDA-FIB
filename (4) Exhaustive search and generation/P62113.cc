@@ -22,7 +22,7 @@ void escribir(const VI& mon, VB& usat, int x, int n) {
 
 void dues_monedes(int x, int n, const VI& mon, VB& usat, int i, int suma) {
     if (x == suma) escribir(mon, usat, x, n);
-    else if (i < 2*n and x < suma) {
+    else if (i < 2*n and x > suma) {
         usat[i] = true;
         dues_monedes(x, n, mon, usat, i+1, suma+mon[i]);
         usat[i] = false;
@@ -36,8 +36,8 @@ int main() {
     int x, n;
     while (cin >> x >> n) {
         VI mon;
-        int valor;
         for (int i = 0; i < n; ++i) {
+            int valor;
             cin >> valor;
             mon.push_back(valor);
             mon.push_back(valor);
