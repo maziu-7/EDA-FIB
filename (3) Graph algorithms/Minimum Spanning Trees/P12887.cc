@@ -4,7 +4,7 @@
 using namespace std;
 
 typedef pair<int,int> Arco; //first = distancia, second = vertice
-typedef vector<vector<Arc>> Grafo;
+typedef vector<vector<Arco>> Grafo;
 
 int prim(const Grafo& G) {
     int n = G.size();
@@ -13,7 +13,7 @@ int prim(const Grafo& G) {
 
     vis[0] = true;
     int s = 0; //suma minima
-    int c = 1; // num de vértices visitados
+    int c = 1; //num de vértices visitados
 
     //añadimos las aristas del vértice 0
     for (Arco uv : G[0]) PQ.push(uv);
