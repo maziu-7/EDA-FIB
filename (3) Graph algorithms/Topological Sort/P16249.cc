@@ -55,7 +55,7 @@ int main() {
         for (int i = 0; i < m; ++i) {
             string x, y;
             cin >> x >> y;
-            G[pos[x].push_back(pos[y])];
+            G[pos[x]].push_back(pos[y]);
             ++ge[pos[y]];
             /*
             auto itx = pos.find(x);
@@ -64,7 +64,7 @@ int main() {
             ++ge[ity->second];
             */
         }
-        queue<string> orden,
+        queue<string> orden;
         ord_tareas(G, noms, pos, ge, orden);
         //orden = ord_tareas(G, noms, pos, ge);
         
