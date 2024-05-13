@@ -1,7 +1,7 @@
 DUMMY_OBJ = AIDummy.o
 
 # Add here any extra .o player files you want to link to the executable
-EXTRA_OBJ = AIscorps.o AIMiriam.o AIScorpion.o AIMarc.o AIDSR6.o AIJugadorcopia.o AISkynet.o AIVodkaJuniors.o AIGotri_v1.7.o
+EXTRA_OBJ = AIscorps.o AIMiriam.o AIScorpion.o AIMarc.o AIDSR6.o AIJugadorcopia.o AISkynet.o AIVodkaJuniors.o AIGotri_v1.7.o Bean3.o
 
 # Configuration
 OPTIMIZE = 3 # Optimization level    (0 to 3)
