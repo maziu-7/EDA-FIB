@@ -5,48 +5,54 @@
 #include <sstream>
 using namespace std;
 
-int main() {
-    int n;
-    cin >> n;
-    string s;
-    cin.ignore();
+typedef vector<queue<string>> colas;
 
-    vector<queue<string>> q(n);
-
+void leer_colas(colas& cj, int n) {
     for (int i = 0; i < n; ++i) {
-        string cola;
-        getline(cin, cola);
-        stringstream ss(cola);
-        while (ss >> s) {
-            q[i].push(s);
-        }
-    }
+        string s;
+        getline(cin, s);
+        istringstream canal(s);
 
-    cout << "DEPARTS" << endl << "-------" << endl;
-    while (cin >> s) {
-        if (s == "LEAVES") {
-            int num_cola;
-            cin >> num_cola;
-            if (num_cola <= n and num_cola >= 1 and !q[num_cola-1].empty()) {
-                cout << q[num_cola-1].front() << endl;
-                q[num_cola-1].pop();
-            }
-        }
-        else if (s == "ENTERS") {
-            string nombre;
-            int num_cola;
-            cin >> nombre >> num_cola;
-            if (num_cola <= n and num_cola >= 1) q[num_cola-1].push(nombre);
-        }
+        string nom;
+        while (canal >> nom) cj[i].push(nom);
     }
-    cout << endl << "FINAL CONTENTS" << endl << "--------------" << endl;
+}
 
-    for (int i = 1; i <= n; ++i) {
-        cout << "queue " << i << ":";
-        while (!q[i-1].empty()) {
-            cout << ' ' << q[i-1].front();
-            q[i-1].pop();
+void escribir_colas(colas& cj, int n) {
+    for (int i = 0; i < n; ++i) {
+        cout << "queue " << i+1 << ':';
+        while (not cj[i].empty()) {
+            cout << ' ' << cj[i].front();
+            cj[i].pop();
         }
         cout << endl;
     }
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cin.ignore();
+
+    colas cj(n);
+    leer_colas(cj, n);
+
+    cout << "DEPARTS" << endl << string(7, '-') << endl;
+    string op, nom; 
+    int c;
+    while (cin >> op) {
+        if (op == "ENTERS") {
+            cin >> nom >> c;
+            if (c >= 1 and c <= n) cj[c-1].push(nom);
+        }
+        else {
+            cin >> c;
+            if (c >= 1 and c <= n and not cj[c-1].empty()) {
+                cout << cj[c-1].front() << endl;
+                cj[c-1].pop();
+            }
+        }
+    }
+    cout << endl << "FINAL CONTENTS" << endl << string(14, '-') << endl;
+    escribir_colas(cj, n);
 }
