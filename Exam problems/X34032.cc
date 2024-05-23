@@ -34,6 +34,7 @@ int busca_p(Tablero& t, int xi, int yi) {
             }
         }
     }
+    return -1;
 }
 
 int main() {
