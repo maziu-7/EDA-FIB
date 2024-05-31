@@ -65,7 +65,7 @@ int main() {
         bool b = bfs(mapa, rec, ini, path);
         if (not b) cout << 0 << endl;
         else {
-            cout << path.size;
+            cout << path.size();
             while (not path.empty()) {
                 cout << ' ' << path.top().first << ' ' << path.top().second;
                 path.pop();
