@@ -38,7 +38,7 @@ bool bfs(VVC& mapa, VVI& rec, Pos ini, stack<Pos>& path) {
             if (mapa[x][y] != 'X') {
                 rec[x][y] = act;
                 if (mapa[x][y] == 'F') {
-                    track_path(rec, ini, act, path);
+                    track_path(rec, ini, {x,y}, path);
                     return true;
                 }
                 Q.push({x,y});
@@ -67,7 +67,7 @@ int main() {
         else {
             cout << path.size();
             while (not path.empty()) {
-                cout << ' ' << path.top().first << ' ' << path.top().second;
+                cout << '  ' << path.top().first << ' ' << path.top().second;
                 path.pop();
             }
             cout << endl;
