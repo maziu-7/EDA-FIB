@@ -67,7 +67,7 @@ int main() {
         else {
             cout << path.size();
             while (not path.empty()) {
-                cout << '  ' << path.top().first << ' ' << path.top().second;
+                cout << "  " << path.top().first << ' ' << path.top().second;
                 path.pop();
             }
             cout << endl;
