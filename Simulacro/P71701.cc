@@ -31,8 +31,8 @@ void reis(int i, int j, int n, int m, int total, VVC& VVC) {
         if (poner_rey(i, j, n, VVC)) {
             VVC[i][j] = 'K';
             reis(i, j+1, n, m, total+1, VVC);
+            VVC[i][j] = '.';
         }
-        VVC[i][j] = '.';
         reis(i, j+1, n, m, total, VVC);
     }
 }
