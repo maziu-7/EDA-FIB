@@ -22,7 +22,6 @@ void par(int i, int n, string& sol, vector<bool>& used) {
 int main() {
     int n;
     cin >> n;
-    vector<char> vc;
     string sol(n, ' ');
     vector<bool> used(n, false);
     par(0, n, sol, used);
