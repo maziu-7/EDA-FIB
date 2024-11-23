@@ -76,7 +76,7 @@
     "editor.scrollbar.vertical": "visible",
     "editor.scrollbar.verticalScrollbarSize": 6,
     "editor.overviewRulerBorder": false,
-    "terminal.integrated.fontFamily": "FiraCode Nerd Font Mono",    //terminal font
+    "terminal.integrated.fontFamily": "FiraCode Nerd Font",    //terminal font
     "terminal.integrated.fontSize": 12,
     "terminal.integrated.fontWeight": "550",
     "terminal.integrated.lineHeight": 1.4,
