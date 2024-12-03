@@ -26,12 +26,19 @@ struct PLAYER_NAME : public Player {
   const vector<Dir> ghostDir = {Down, DR, Right, RU, Up, UL, Left, LD};
 
   /*
-  bool voldemortNearby() {
+  bool voldemortNearby(const int& id) {
   
   }
   */
 
-  void wizardMovement(const int& wizardID) {
+  Dir opposedDir(Dir& d) {
+    if (d == Up) return Down;
+    else if (d == Down) return Up;
+    else if (d == Left) return Right;
+    return Left;
+  }
+
+  void wizardMovement(const int& id) {
     Pos iniPos = unit(id).pos;
     queue<pair<Pos, Dir>> q;
     vector<VI> visCells(board_rows(), vector<int> (board_cols(), -1));
@@ -39,18 +46,50 @@ struct PLAYER_NAME : public Player {
 
     for (Dir iniDir : wizardDir) {
       Pos nextPos = iniPos + iniDir;
-      if (pos_ok(nextPos) and cell(nextPos).type != Wall and visCells[nextPos.i][nextPos.j] = -1) {
+      if (pos_ok(nextPos) and cell(nextPos).type != Wall and visCells[nextPos.i][nextPos.j] == -1) {
         q.push({nextPos, iniDir});
         visCells[nextPos.i][nextPos.j] = 1;
-        if (cell(nextPos).book) move(wizardID, iniDir);
-        else if ()
+        if (cell(nextPos).book) {
+          move(id, iniDir);
+          return;
+        }
+        else if (unit(cell(nextPos)).id != -1 and unit(cell(nextPos)).id != me()) {
+          if (mi fuerza > fuerza otro) {
+            me doy
+          }
+          else {
+            me piro (dir opuesta(si valida))
+          }
+        }
+      }
+    }
+
+    while (not q.empty()) {
+      Pos newPos = q.front().first;
+      Dir newDir = q.front().second;
+      q.pop();
+
+      for (Dir d : wizardDir) {
+        Pos nextPos = newPos + d;
+        if (pos_ok(nextPos) and cell(nextPos).type != Wall and visCells[nextPos.i][nextPos.j] == -1) {
+          q.push({nextPos, newDir});
+          visCells[nextPos.i][nextPos.j] = 1;
+          if (cell(nextPos).book) {
+            move(id, newDir);
+            return;
+          }
+          else if (cell(nextPos)) {
+            
+          }
+        }
       }
     }
   }
 
-  void ghostMovement(const int& ghostID) {
+  void ghostMovement(const int& id) {
 
   }
+
   /**
    * Play method, invoked once per each round.
    */
