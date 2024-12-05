@@ -53,16 +53,6 @@ struct PLAYER_NAME : public Player {
           move(id, iniDir);
           return;
         }
-        else if (cell(nextPos).id != -1 and unit(cell(nextPos).id).player != me()) {
-          if (magic_strength(unit(cell(iniPos).id).player) >= magic_strength(unit(cell(nextPos).id).player)) {
-            move(id, iniDir);
-            return;
-          }
-        }
-        else {
-          move(id, iniDir);
-          return;
-        }
       }
     }
 
@@ -80,19 +70,10 @@ struct PLAYER_NAME : public Player {
             move(id, newDir);
             return;
           }
-          else if (cell(nextPos).id != -1 and unit(cell(nextPos).id).player != me()) {
-            if (magic_strength(unit(cell(iniPos).id).player) >= magic_strength(unit(cell(nextPos).id).player)) {
-              move(id, newDir);
-              return;
-            }
-          }
-          else {
-            move(id, newDir);
-            return;
-          }
         }
       }
     }
+    move(id, Down);
   }
 
   void ghostMovement(const int& id) {
@@ -107,10 +88,6 @@ struct PLAYER_NAME : public Player {
         q.push({nextPos, iniDir});
         visCells[nextPos.i][nextPos.j] = 1;
         if (cell(nextPos).book) {
-          move(id, iniDir);
-          return;
-        }
-        else {
           move(id, iniDir);
           return;
         }
@@ -131,13 +108,10 @@ struct PLAYER_NAME : public Player {
             move(id, newDir);
             return;
           }
-          else {
-            move(id, newDir);
-            return;
-          }
         }
       }
     }
+    move(id, Down);
   }
 
   /**
