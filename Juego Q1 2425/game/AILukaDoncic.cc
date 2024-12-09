@@ -25,19 +25,6 @@ struct PLAYER_NAME : public Player {
   const vector<Dir> wizardDir = {Down, Right, Up, Left};
   const vector<Dir> ghostDir = {Down, DR, Right, RU, Up, UL, Left, LD};
 
-  /*
-  bool voldemortNearby(const int& id) {
-  
-  }
-  */
-
-  /*Dir opposedDir(Dir& d) {
-    if (d == Up) return Down;
-    else if (d == Down) return Up;
-    else if (d == Left) return Right;
-    return Left;
-  }*/
-
   void wizardMovement(const int& id) {
     Pos iniPos = unit(id).pos;
     queue<pair<Pos, Dir>> q;
