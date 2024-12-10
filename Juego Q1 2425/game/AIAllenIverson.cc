@@ -5,7 +5,7 @@
  * Write the name of your player and save this file
  * with the same name and .cc extension.
  */
-#define PLAYER_NAME LukaDoncic77
+#define PLAYER_NAME AllenIverson
 
 
 struct PLAYER_NAME : public Player {
@@ -37,14 +37,14 @@ struct PLAYER_NAME : public Player {
         if (cell(nextPos).id == -1) {
           q.push({nextPos, iniDir});
           visCells[nextPos.i][nextPos.j] = 1;
-        }
-        if (cell(nextPos).book) {
-          move(id, iniDir);
-          return;
+          if (cell(nextPos).book) {
+            move(id, iniDir);
+            return;
+          }
         }
         else if (cell(nextPos).id != -1 and unit(cell(nextPos).id).player != me()) {
           if (unit(cell(nextPos).id).rounds_pending == 0) {
-            if (magic_strength(me()) >= magic_strength(unit(cell(nextPos).id).player)) {
+            if ((magic_strength(me()) >= magic_strength(unit(cell(nextPos).id).player)) or unit(cell(nextPos).id).type == Ghost) {
               move(id, iniDir);
               return;
             }
@@ -64,14 +64,14 @@ struct PLAYER_NAME : public Player {
           if (cell(nextPos).id == -1) {
             q.push({nextPos, newDir});
             visCells[nextPos.i][nextPos.j] = 1;
-          }
-          if (cell(nextPos).book) {
-            move(id, newDir);
-            return;
+            if (cell(nextPos).book) {
+              move(id, newDir);
+              return;
+            }
           }
           else if (cell(nextPos).id != -1 and unit(cell(nextPos).id).player != me()) {
             if (unit(cell(nextPos).id).rounds_pending == 0) {
-              if (magic_strength(me()) >= magic_strength(unit(cell(nextPos).id).player)) {
+              if ((magic_strength(me()) >= magic_strength(unit(cell(nextPos).id).player)) or unit(cell(nextPos).id).type == Ghost) {
                 move(id, newDir);
                 return;
               }
