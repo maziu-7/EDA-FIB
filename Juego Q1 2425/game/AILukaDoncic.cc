@@ -40,6 +40,14 @@ struct PLAYER_NAME : public Player {
           move(id, iniDir);
           return;
         }
+        else if (cell(nextPos).owner != -1) {
+          if (unit(cell(nextPos).id).player != me() and unit(cell(nextPos).id).rounds_pending == 0) {
+            if (magic_strength(me()) >= magic_strength(unit(cell(nextPos).id).player)) {
+              move(id, iniDir);
+              return;
+            }
+          }
+        }
       }
     }
 
@@ -57,10 +65,17 @@ struct PLAYER_NAME : public Player {
             move(id, newDir);
             return;
           }
+          else if (cell(nextPos).owner != -1) {
+            if (unit(cell(nextPos).id).player != me() and unit(cell(nextPos).id).rounds_pending == 0) {
+              if (magic_strength(me()) >= magic_strength(unit(cell(nextPos).id).player)) {
+                move(id, newDir);
+                return;
+              }
+            }
+          }
         }
       }
     }
-    move(id, Down);
   }
 
   void ghostMovement(const int& id) {
@@ -98,8 +113,35 @@ struct PLAYER_NAME : public Player {
         }
       }
     }
-    move(id, Down);
   }
+
+  /*vector<int> agrupar_ingredientes(const vector<int>& ingredientes) {
+    int suma_objetivo = 0;
+    for (int i = 0; i < 15; ++i) {
+        suma_objetivo += ingredientes[i];
+    }
+    suma_objetivo /= 5; // 15 elementos divididos en 5 grupos de 3.
+
+    vector<int> resultado(15, 0);
+    int grupo_actual = 0;
+    int suma_actual = 0;
+    int elementos_grupo = 0;
+
+    for (int i = 0; i < 15; ++i) {
+        suma_actual += ingredientes[i];
+        ++elementos_grupo;
+        resultado[i] = grupo_actual;
+
+        if (suma_actual == suma_objetivo && elementos_grupo == 3) {
+            ++grupo_actual;
+            suma_actual = 0;
+            elementos_grupo = 0;
+        }
+    }
+    return resultado;
+  }*/
+
+
 
   /**
    * Play method, invoked once per each round.
@@ -108,8 +150,14 @@ struct PLAYER_NAME : public Player {
     vector<int> wiz = wizards(me());
     int g = ghost(me());
 
+    /*if (round() >= 50 and round() <= 150 and unit(g).rounds_pending == 0) {
+      vector<int> s = spell_ingredients();
+      vector<int> sol = agrupar_ingredientes(s);
+      spell(g, sol);
+    }
+    else*/ ghostMovement(g);
+
     for (int w : wiz) wizardMovement(w);
-    ghostMovement(g);
   }
 
 };
