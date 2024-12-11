@@ -34,14 +34,14 @@ struct PLAYER_NAME : public Player {
     for (Dir iniDir : wizardDir) {
       Pos nextPos = iniPos + iniDir;
       if (pos_ok(nextPos) and cell(nextPos).type != Wall and visCells[nextPos.i][nextPos.j] == -1) {
-        //if (cell(nextPos).id == -1) {
+        if (cell(nextPos).id == -1) {
           q.push({nextPos, iniDir});
           visCells[nextPos.i][nextPos.j] = 1;
           if (cell(nextPos).book) {
             move(id, iniDir);
             return;
           }
-        //}
+        }
         else if (cell(nextPos).id != -1 and unit(cell(nextPos).id).player != me()) {
           if (unit(cell(nextPos).id).rounds_pending == 0) {
             if (magic_strength(me()) >= magic_strength(unit(cell(nextPos).id).player)) {
@@ -61,14 +61,14 @@ struct PLAYER_NAME : public Player {
       for (Dir d : wizardDir) {
         Pos nextPos = newPos + d;
         if (pos_ok(nextPos) and cell(nextPos).type != Wall and visCells[nextPos.i][nextPos.j] == -1) {
-          //if (cell(nextPos).id == -1) {
+          if (cell(nextPos).id == -1) {
             q.push({nextPos, newDir});
             visCells[nextPos.i][nextPos.j] = 1;
             if (cell(nextPos).book) {
               move(id, newDir);
               return;
             }
-          //}
+          }
           else if (cell(nextPos).id != -1 and unit(cell(nextPos).id).player != me()) {
             if (unit(cell(nextPos).id).rounds_pending == 0) {
               if (magic_strength(me()) >= magic_strength(unit(cell(nextPos).id).player)) {
