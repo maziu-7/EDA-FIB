@@ -2,6 +2,8 @@ AIAllenIverson.o: AIAllenIverson.cc Player.hh Info.hh Settings.hh \
  Structs.hh Utils.hh Defs.hh State.hh Action.hh Random.hh Registry.hh
 AIDemo.o: AIDemo.cc Player.hh Info.hh Settings.hh Structs.hh Utils.hh \
  Defs.hh State.hh Action.hh Random.hh Registry.hh
+AIKyrieIrving.o: AIKyrieIrving.cc Player.hh Info.hh Settings.hh \
+ Structs.hh Utils.hh Defs.hh State.hh Action.hh Random.hh Registry.hh
 AILukaDoncic.o: AILukaDoncic.cc Player.hh Info.hh Settings.hh Structs.hh \
  Utils.hh Defs.hh State.hh Action.hh Random.hh Registry.hh
 AILukaDoncic77.o: AILukaDoncic77.cc Player.hh Info.hh Settings.hh \
@@ -10,6 +12,8 @@ AIMateus.o: AIMateus.cc Player.hh Info.hh Settings.hh Structs.hh Utils.hh \
  Defs.hh State.hh Action.hh Random.hh Registry.hh
 AINull.o: AINull.cc Player.hh Info.hh Settings.hh Structs.hh Utils.hh \
  Defs.hh State.hh Action.hh Random.hh Registry.hh
+AIStephenCurry.o: AIStephenCurry.cc Player.hh Info.hh Settings.hh \
+ Structs.hh Utils.hh Defs.hh State.hh Action.hh Random.hh Registry.hh
 Action.o: Action.cc Action.hh Structs.hh Utils.hh Defs.hh
 Board.o: Board.cc Board.hh Info.hh Settings.hh Structs.hh Utils.hh \
  Defs.hh State.hh Action.hh Random.hh

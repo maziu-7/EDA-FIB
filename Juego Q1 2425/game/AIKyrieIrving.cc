@@ -5,7 +5,7 @@
  * Write the name of your player and save this file
  * with the same name and .cc extension.
  */
-#define PLAYER_NAME LukaDoncic
+#define PLAYER_NAME KyrieIrving
 
 
 struct PLAYER_NAME : public Player {

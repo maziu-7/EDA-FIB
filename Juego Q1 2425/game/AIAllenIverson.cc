@@ -34,13 +34,11 @@ struct PLAYER_NAME : public Player {
     for (Dir iniDir : wizardDir) {
       Pos nextPos = iniPos + iniDir;
       if (pos_ok(nextPos) and cell(nextPos).type != Wall and visCells[nextPos.i][nextPos.j] == -1) {
-        if (cell(nextPos).id == -1) {
-          q.push({nextPos, iniDir});
-          visCells[nextPos.i][nextPos.j] = 1;
-          if (cell(nextPos).book) {
-            move(id, iniDir);
-            return;
-          }
+        q.push({nextPos, iniDir});
+        visCells[nextPos.i][nextPos.j] = 1;
+        if (cell(nextPos).book) {
+          move(id, iniDir);
+          return;
         }
         else if (cell(nextPos).id != -1 and unit(cell(nextPos).id).player != me()) {
           if (unit(cell(nextPos).id).rounds_pending == 0) {
@@ -61,13 +59,11 @@ struct PLAYER_NAME : public Player {
       for (Dir d : wizardDir) {
         Pos nextPos = newPos + d;
         if (pos_ok(nextPos) and cell(nextPos).type != Wall and visCells[nextPos.i][nextPos.j] == -1) {
-          if (cell(nextPos).id == -1) {
-            q.push({nextPos, newDir});
-            visCells[nextPos.i][nextPos.j] = 1;
-            if (cell(nextPos).book) {
-              move(id, newDir);
-              return;
-            }
+          q.push({nextPos, newDir});
+          visCells[nextPos.i][nextPos.j] = 1;
+          if (cell(nextPos).book) {
+            move(id, newDir);
+            return;
           }
           else if (cell(nextPos).id != -1 and unit(cell(nextPos).id).player != me()) {
             if (unit(cell(nextPos).id).rounds_pending == 0) {
@@ -123,38 +119,33 @@ struct PLAYER_NAME : public Player {
     }
   }
 
-  /*vector<int> repartir_ingredients(const vector<int>& ingredients) {
-    // Suponemos que el tamaño de ingredients siempre será 15
-    vector<int> resultado(15, -1);
-    
-    int suma_total = accumulate(ingredients.begin(), ingredients.end(), 0);
-    int suma_grupo = suma_total / 5; // 15 números -> 5 grupos de 3 números
-
-    int grupo_actual = 0;
-    int suma_actual = 0;
-    int contador = 0;
-
-    for (int i = 0; i < 15; ++i) {
-      if (resultado[i] == -1) {
-        suma_actual = ingredients[i];
-        resultado[i] = grupo_actual;
-        contador = 1;
-
-        for (int j = i + 1; j < 15 && contador < 3; ++j) {
-          if (resultado[j] == -1 && suma_actual + ingredients[j] <= suma_grupo) {
-            suma_actual += ingredients[j];
-            resultado[j] = grupo_actual;
-            ++contador;
-          }
+  bool findSol(const vector<int>& ingredients, vector<int>& solution, vector<int>& groupSums, int index, int targetSum) {
+    if (index == 15) {
+        for (int i = 0; i < 5; ++i) {
+            if (groupSums[i] != targetSum) return false;
         }
-
-        if (contador == 3 && suma_actual == suma_grupo) {
-          ++grupo_actual;
-        }
+        return true;
+    }
+    for (int group = 0; group < 5; ++group) {
+      if (groupSums[group] + ingredients[index] <= targetSum) {
+        solution[index] = group;
+        groupSums[group] += ingredients[index];
+        if (findSol(ingredients, solution, groupSums, index + 1, targetSum)) return true;
+        groupSums[group] -= ingredients[index];
       }
     }
-    return resultado;
-  }*/
+    return false;
+  }
+
+  vector<int> solveSpell(const vector<int>& ingredients) {
+    int totalSum = 0;
+    for (int i = 0; i < 15; ++i) totalSum += ingredients[i];
+    int targetSum = totalSum/5;
+    vector<int> solution(15, -1);
+    vector<int> groupSums(5, 0);
+    findSol(ingredients, solution, groupSums, 0, targetSum);
+    return solution;
+  }
 
   /**
    * Play method, invoked once per each round.
@@ -162,17 +153,17 @@ struct PLAYER_NAME : public Player {
   virtual void play () {
     vector<int> wiz = wizards(me());
     int g = ghost(me());
-    //bool castedSpell = false;
+    bool castedSpell = false;
 
-    /*if (round() >= 50 and round() <= 150 and unit(g).rounds_pending == 0) {
+    if (round() >= 50 and round() <= 150 and unit(g).rounds_pending == 0) {
       vector<int> s = spell_ingredients();
-      vector<int> sol = repartir_ingredients(s);
+      vector<int> sol = solveSpell(s);
       if ((not s.empty()) and (not sol.empty())) {
         spell(g, sol);
         castedSpell = true;
       }
     }
-    else if (not castedSpell)*/ ghostMovement(g);
+    else if (not castedSpell) ghostMovement(g);
 
     for (int w : wiz) wizardMovement(w);
   }
