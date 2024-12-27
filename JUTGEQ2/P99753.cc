@@ -1,38 +1,31 @@
 #include <vector>
-#include <iostream>
 using namespace std;
 
-int find_peak(const vector<int>& v) {
-    int l = 0;
-    int r = v.size() - 1;
-    while (l < r) {
-        int m = (l+r)/2;
-        if (v[m] > v[m+1]) r = m;
-        else l = m+1;
-    }
-    return l;
-}
-
-bool binary_search(const vector<int>& v, int x, int l, int r) {
-    while (l <= r) {
-        int m = (l+r)/2;
-        if (v[m] == x) return true;
-        else if (v[m] < x) l = m+1;
-        else r = m-1;
+bool binary_search(const vector<int>& v, int x, int left, int right) {
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (v[mid] == x) return true;
+        else if (v[mid] < x) left = mid + 1;
+        else right = mid - 1;
     }
     return false;
 }
 
-bool search(int x, const vector<int>& v) {
-    int peak = find_peak(v);
-    return binary_search(v, x, 0, peak) or binary_search(v, x, peak + 1, v.size() - 1);
+int find_pivot(const vector<int>& v, int left, int right) {
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (v[mid] > v[mid + 1]) return mid + 1;
+        if (v[mid] < v[left]) right = mid - 1;
+        else left = mid + 1;
+    }
+    return 0;
 }
 
-int main() {
-    vector<int> v = {12, 12, 15, 20, 1, 3, 3, 5, 9};
-    int p = find_peak(v);
-    cout << p << endl;
-    cout << (search(15, v) ? "true" : "false") << endl; // true
-    cout << (search(2, v) ? "true" : "false") << endl; // false
-    return 0;
+bool search(int x, const vector<int>& v) {
+    int n = v.size();
+
+    int pivot = find_pivot(v, 0, n - 1);
+
+    if (binary_search(v, x, 0, pivot - 1)) return true;
+    return binary_search(v, x, pivot, n - 1);
 }
