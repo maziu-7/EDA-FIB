@@ -7,7 +7,7 @@ typedef vector<VC> VCC;
 
 void imprime(const VCC& t) {
     for (int i = 0; i < t.size(); ++i) {
-        for (int j=0; j < t[0].size(); ++j) cout << t[i][j];
+        for (int j = 0; j < t[0].size(); ++j) cout << t[i][j];
         cout << endl;
     }
     cout << endl;
