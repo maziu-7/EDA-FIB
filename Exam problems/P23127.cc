@@ -10,7 +10,7 @@ int main() {
         string nom, p, voto;
         for (int i = 0; i < n; ++i) {
             cin >> nom >> p;
-            prop.insert({p, nom}); //1a aparicion
+            prop.insert({p, nom});
         }
 
         //first: <nom, prop>(clave), second: voto(true, false)
@@ -24,7 +24,6 @@ int main() {
 
         //first: propuesta(clave), second: nsi, nno
         map<string, pair<int, int>> res;
-
         for (auto it = votos.begin(); it != votos.end(); ++it) {
             bool b = it->second;
             p = it->first.second;

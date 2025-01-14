@@ -9,15 +9,6 @@ int main() {
         if (op == "affair") {
             string x, y;
             cin >> x >> y;
-            /*auto it = parejas.find(x);
-            if (it != parejas.end()) { //x está en el map
-                if (it->second != "") { //x no estaba soltero
-                    auto it2 = parejas.find(it->second);
-                    it2->second = "";
-                }
-                it->second = y;
-            }
-            else parejas.insert({x,y});*/
             if (parejas[x] != "") parejas[parejas[x]] = "";
             parejas[x] = y;
 

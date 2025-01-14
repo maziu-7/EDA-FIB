@@ -2,45 +2,45 @@
 #include <vector>
 using namespace std;
 
-typedef vector<vector<char>> MC;
+typedef vector<vector<char>> VVC;
 typedef pair<int,int> Pos;
 
-const vector<Pos> Dir = {{-1,-1}, {-1, 0}, {-1, 1}, {0,1}, {1,1}, {1,0}, {1,-1}, {0,-1}};
-int n,k;
+const vector<Pos> Dir = {{1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}};
+int n, k;
 
-void escribe(const MC& tablero) {
+void escribe(const VVC& vvc) {
     for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) cout << tablero[i][j];
+        for (int j = 0; j < n; ++j) cout << vvc[i][j];
         cout << endl;
     }
-    cout << "----------" << endl;
+    cout << string(10, '-') << endl;
 }
 
-bool pos_valida_rey(const MC& tablero, int i, int j) {
-    for (int m = 0; m < 8; ++m) { //miramos en todas las direcciones posibles si se puede poner un rey
+bool puedo_poner_rey(const VVC& vvc, int i, int j) {
+    for (int m = 0; m < 8; ++m) {
         int f = i + Dir[m].first;
         int c = j + Dir[m].second;
-        if (f >= 0 and f < n and c >= 0 and c < n and tablero[f][c] == 'K') return false;
+        if (f >= 0 and f < n and c >= 0 and c < n and vvc[f][c] == 'K') return false;
     }
     return true;
 }
 
-void poner_rey(MC& tablero, int i, int j, int nreyes) {
-    if (i == n) return; //ya hemos recorrido todo el tablero
-    else if (nreyes == k) escribe(tablero); //si ya hemos llegado a la k que pide el input escribimos solución
-    else if (j == n) poner_rey(tablero, i+1, 0, nreyes); //si ya hemos mirado todas las columnas de la fila actual, pasamos a la siguiente fila
+void poner_rey(VVC& vvc, int i, int j, int nreyes) {
+    if (i == n) return;
+    else if (nreyes == k) escribe(vvc);
+    else if (j == n) poner_rey(vvc, i+1, 0, nreyes);
     else {
-        if (pos_valida_rey(tablero, i, j)) { //si podemos poner un rey:
-            tablero[i][j] = 'K'; //marcamos la casilla
-            poner_rey(tablero, i, j+1, nreyes+1); //llamamos recursivamente para pasar a la siguiente columna
-            tablero[i][j] = '.'; //desmarcamos el rey que acabamos de poner
+        if (puedo_poner_rey(vvc, i, j)) {
+            vvc[i][j] = 'K';
+            poner_rey(vvc, i, j+1, nreyes+1);
+            vvc[i][j] = '.';
         }
-        poner_rey(tablero, i, j+1, nreyes); //si no podemos poner un rey en la pos actual, pasamos a la siguiente
+        poner_rey(vvc, i, j+1, nreyes);
     }
 }
 
 int main() {
     cin >> n >> k;
-    MC tablero(n, vector<char>(n, '.'));
-    poner_rey(tablero, 0, 0, 0);
+    VVC vvc(n, vector<char>(n, '.'));
+    poner_rey(vvc, 0, 0, 0);
 }
